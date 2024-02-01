@@ -28,8 +28,10 @@ const swaggerOptions = {
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
+console.log(JSON.stringify(swaggerSpec, null, 2));
 
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+
 // parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));
 
