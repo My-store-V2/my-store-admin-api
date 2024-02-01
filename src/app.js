@@ -3,11 +3,26 @@ const cors = require("cors");
 const config = require("./config");
 const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerUI = require("swagger-ui-express");
+const Sequelize = require("sequelize");
 
 const app = express();
 
 // parse json request body
 app.use(express.json());
+
+const sequelize = new Sequelize(
+    config.database,
+    config.username,
+    config.password,
+    {
+        port: config.port,
+        host: config.host,
+        dialect: config.dialect,
+        dialectOptions: {
+            connectTimeout: 60000,
+        },
+    }
+);
 
 // Swagger options
 const swaggerOptions = {
@@ -24,12 +39,11 @@ const swaggerOptions = {
             },
         ],
     },
-    apis: ["./routes/*.js"],
+    apis: ["src/routes/*.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
 console.log(JSON.stringify(swaggerSpec, null, 2));
-
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 // parse urlencoded request body
@@ -51,9 +65,19 @@ app.get("/", (req, res) => {
 });
 
 // api routes prefix
-app.use("/api", require("./routes/sampleRoutes"));
+app.use("/api", require("./routes/index"));
 
 // run server
+
+sequelize
+    .sync()
+    .then(() => {
+        console.log("database synchronised");
+    })
+    .catch((err) => {
+        console.error("database synchronisation error :", err);
+    });
+
 app.listen(config.port, () => {
     console.log("server launch");
 });
