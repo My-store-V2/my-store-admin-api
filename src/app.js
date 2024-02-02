@@ -31,7 +31,7 @@ const swaggerOptions = {
         info: {
             title: "Admin API template for Products",
             version: "1.0.1",
-            description: "Products admin api documentation",
+            description: "Products admin api documentation lol",
         },
         servers: [
             {
