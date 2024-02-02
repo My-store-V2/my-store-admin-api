@@ -29,9 +29,9 @@ const swaggerOptions = {
     definition: {
         openapi: "3.0.1",
         info: {
-            title: "Node API template",
-            version: "1.0.0",
-            description: "A sample Api",
+            title: "Admin API template for Products",
+            version: "1.0.1",
+            description: "Products admin api documentation",
         },
         servers: [
             {
