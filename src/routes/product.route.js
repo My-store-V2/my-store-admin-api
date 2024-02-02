@@ -5,6 +5,54 @@ const productController = require("../controllers/product.controller");
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     Product:
+ *       type: object
+ *       required:
+ *         - name
+ *         - price
+ *       properties:
+ *         id:
+ *           type: integer
+ *           format: int64
+ *           description: The auto-generated ID of the product
+ *         name:
+ *           type: string
+ *           description: The name of the product
+ *         description:
+ *           type: string
+ *           description: The description of the product
+ *         active:
+ *           type: boolean
+ *           description: Whether the product is active or not
+ *         thumbnail:
+ *           type: string
+ *           description: URL or path to the product's thumbnail image
+ *         packshot:
+ *           type: string
+ *           description: URL or path to the product's packshot image
+ *         price:
+ *           type: number
+ *           format: int
+ *           description: The price of the product
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: The date and time when the product was added
+ *       example:
+ *         id: 1
+ *         name: "Sample Product"
+ *         description: "This is a sample product description."
+ *         active: true
+ *         thumbnail: "https://example.com/thumbnail.jpg"
+ *         packshot: "https://example.com/packshot.jpg"
+ *         price: 19.99
+ *         createdAt: "2022-02-02T12:34:56.789Z"
+ */
+
+/**
+ * @swagger
  * tags:
  *   name: Products
  *   description: API operations related to products
@@ -138,14 +186,6 @@ router.get("/:id", productController.getProduct);
  *           application/json:
  *             example:
  *               success: true
- *               results:
- *                 id: 1
- *                 name: "W simple pant"
- *                 description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor ..."
- *                 active: 1
- *                 thumbnail: "uploads/product1.webp"
- *                 packshot: "/uploads/product1_packshot.jpeg"
- *                 price: 123
  *               message: Product successfully created
  *       400:
  *         description: Bad Request
@@ -200,14 +240,6 @@ router.post("/", productController.postProduct);
  *           application/json:
  *             example:
  *               success: true
- *               results:
- *                 id: 1
- *                 name: "Updated Product"
- *                 description: "Updated description"
- *                 active: true
- *                 thumbnail: "uploads/product2.webp"
- *                 packshot: "/uploads/product2_packshot.jpeg"
- *                 price: 150
  *               message: Product successfully updated
  *       400:
  *         description: Bad Request

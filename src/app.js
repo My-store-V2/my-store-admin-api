@@ -78,7 +78,9 @@ sequelize
     });
 
 app.listen(config.port, () => {
-    console.log(`Server launch on http://localhost:${config.port}`);
+    console.log(
+        `Server launch on http://localhost:${config.port}\nTo see the api-docs in on http://localhost:${config.port}/api-docs`
+    );
 });
 
 module.exports = app;

@@ -3,9 +3,7 @@ const db = require("../models");
 module.exports = {
     // controller to get all products
     getProducts: async (req, res) => {
-        console.log("Enter 1");
         try {
-            console.log("Enter 2");
             // retrieve all products using Sequelize's findAll() method
             const products = await db.Product.findAll();
 
@@ -88,8 +86,8 @@ module.exports = {
             // Return the newly created product in JSON format
             return res.status(201).json({
                 success: true,
-                results: newProduct,
-                message: "Product successfully created",
+                results: newProduct.id,
+                message: `Product ${newProduct.id} successfully created`,
             });
         } catch (err) {
             // If an error occurs, return a 500 status code with the error message
@@ -138,8 +136,7 @@ module.exports = {
             // Return the updated product in JSON format
             return res.status(200).json({
                 success: true,
-                results: existingProduct,
-                message: "Product successfully updated",
+                message: `Product ${productId} has been successfully updated`,
             });
         } catch (err) {
             // If an error occurs, return a 500 status code with the error message
@@ -178,7 +175,7 @@ module.exports = {
             // Return a success message
             return res.status(200).json({
                 success: true,
-                message: "Product successfully deleted",
+                message: `Product ${productId} successfully deleted`,
             });
         } catch (err) {
             // If an error occurs, return a 500 status code with the error message
