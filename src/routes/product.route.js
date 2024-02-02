@@ -17,6 +17,8 @@ const productController = require("../controllers/product.controller");
  *         description: Successful response
  *         content:
  *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
  *             example:
  *               results:
  *                 - id: 1
@@ -75,6 +77,8 @@ router.get("/", productController.getProducts);
  *         description: Successful response
  *         content:
  *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
  *             example:
  *               results:
  *                 id: 1
@@ -124,6 +128,8 @@ router.get("/:id", productController.getProduct);
  *       required: true
  *       content:
  *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Product'
  *           example:
  *             name: "W simple pant"
  *             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor ..."
@@ -178,6 +184,8 @@ router.post("/", productController.postProduct);
  *       required: true
  *       content:
  *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Product'
  *           example:
  *             name: "Updated Product"
  *             description: "Updated description"
