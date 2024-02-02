@@ -3,7 +3,9 @@ const db = require("../models");
 module.exports = {
     // controller to get all products
     getProducts: async (req, res) => {
+        console.log("Enter 1");
         try {
+            console.log("Enter 2");
             // retrieve all products using Sequelize's findAll() method
             const products = await db.Product.findAll();
 

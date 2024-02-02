@@ -15,7 +15,7 @@ const sequelize = new Sequelize(
     config.username,
     config.password,
     {
-        port: config.port,
+        port: config.db_port,
         host: config.host,
         dialect: config.dialect,
         dialectOptions: {
@@ -43,7 +43,6 @@ const swaggerOptions = {
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
-console.log(JSON.stringify(swaggerSpec, null, 2));
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 // parse urlencoded request body
@@ -61,7 +60,7 @@ app.use(express.static(__dirname + "/public"));
 
 // initial route
 app.get("/", (req, res) => {
-    res.send({ message: "Welcome to app-store-api application." });
+    res.send({ message: "Welcome to my-store-admin-api." });
 });
 
 // api routes prefix
@@ -72,14 +71,14 @@ app.use("/api", require("./routes/index"));
 sequelize
     .sync()
     .then(() => {
-        console.log("database synchronised");
+        console.log("Database Synchronised");
     })
     .catch((err) => {
         console.error("database synchronisation error :", err);
     });
 
 app.listen(config.port, () => {
-    console.log("server launch");
+    console.log(`Server launch on http://localhost:${config.port}`);
 });
 
 module.exports = app;
