@@ -39,7 +39,7 @@ const swaggerOptions = {
             },
         ],
     },
-    apis: ["src/routes/*.js"],
+    apis: ["src/routes/*.js", "src/models/*.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
