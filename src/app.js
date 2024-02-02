@@ -11,35 +11,35 @@ const app = express();
 app.use(express.json());
 
 const sequelize = new Sequelize(
-    config.database,
-    config.username,
-    config.password,
-    {
-        port: config.db_port,
-        host: config.host,
-        dialect: config.dialect,
-        dialectOptions: {
-            connectTimeout: 60000,
-        },
-    }
+  config.database,
+  config.username,
+  config.password,
+  {
+    port: config.db_port,
+    host: config.host,
+    dialect: config.dialect,
+    dialectOptions: {
+      connectTimeout: 60000,
+    },
+  }
 );
 
 // Swagger options
 const swaggerOptions = {
-    definition: {
-        openapi: "3.0.1",
-        info: {
-            title: "Admin API template for Products",
-            version: "1.0.1",
-            description: "Products admin api documentation lol",
-        },
-        servers: [
-            {
-                url: `http://localhost:${config.port}`,
-            },
-        ],
+  definition: {
+    openapi: "3.0.1",
+    info: {
+      title: "Admin API template for Products",
+      version: "1.0.1",
+      description: "Products admin api documentation lol",
     },
-    apis: ["src/routes/*.js", "src/models/*.js"],
+    servers: [
+      {
+        url: `http://localhost:${config.port}`,
+      },
+    ],
+  },
+  apis: ["src/routes/*.js", "src/models/*.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
@@ -50,9 +50,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // cors
 app.use(
-    cors({
-        origin: config.frontend_url,
-    })
+  cors({
+    origin: config.frontend_url,
+  })
 );
 
 //access to public folder
@@ -60,7 +60,7 @@ app.use(express.static(__dirname + "/public"));
 
 // initial route
 app.get("/", (req, res) => {
-    res.send({ message: "Welcome to my-store-admin-api." });
+  res.send({ message: "Welcome to my-store-admin-api." });
 });
 
 // api routes prefix
@@ -69,18 +69,18 @@ app.use("/api", require("./routes/index"));
 // run server
 
 sequelize
-    .sync()
-    .then(() => {
-        console.log("Database Synchronised");
-    })
-    .catch((err) => {
-        console.error("database synchronisation error :", err);
-    });
+  .sync()
+  .then(() => {
+    console.log("Database Synchronised");
+  })
+  .catch((err) => {
+    console.error("database synchronisation error :", err);
+  });
 
 app.listen(config.port, () => {
-    console.log(
-        `Server launch on http://localhost:${config.port}\nTo see the api-docs in on http://localhost:${config.port}/api-docs`
-    );
+  console.log(
+    `Server launch on http://localhost:${config.port}\nTo see the api-docs in on http://localhost:${config.port}/api-docs`
+  );
 });
 
 module.exports = app;
