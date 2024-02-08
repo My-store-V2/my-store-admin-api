@@ -51,57 +51,57 @@
  */
 
 module.exports = (sequelize, DataTypes) => {
-  // Definition of the User model
-  const User = sequelize.define(
-    "User",
-    {
-      id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      firstname: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      lastname: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      address: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      zipcode: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      city: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      phone: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      admin: {
-        type: DataTypes.BOOLEAN,
-        allowNull: true,
-      },
-    },
-    {
-      tableName: "User",
-      timestamps: false,
-    }
-  );
+    // Definition of the User model
+    const User = sequelize.define(
+        "User",
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+            },
+            firstname: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            lastname: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            email: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            password: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            address: {
+                type: DataTypes.STRING,
+                allowNull: true,
+            },
+            zipcode: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+            },
+            city: {
+                type: DataTypes.STRING,
+                allowNull: true,
+            },
+            phone: {
+                type: DataTypes.STRING,
+                allowNull: true,
+            },
+            admin: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+            },
+        },
+        {
+            tableName: "User",
+            timestamps: false,
+        }
+    );
 
-  return User;
+    return User;
 };

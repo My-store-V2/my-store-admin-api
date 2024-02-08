@@ -17,6 +17,8 @@ const userController = require("../controllers/user.controller");
  *         description: A list of users
  *         content:
  *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  *             example:
  *               success: true
  *               results: []
@@ -40,21 +42,23 @@ router.get("/", userController.getUsers);
 /**
  * @swagger
  * /api/users/{id}:
+ *   components:
+ *    schema:
+ *           $ref: "#/components/schemas/User"
  *   get:
  *     summary: Get a user by ID
  *     description: Retrieve a user by their ID.
  *     parameters:
  *       - in: path
  *         name: id
- *         schema:
- *           type: string
- *         required: true
  *         description: ID of the user to retrieve
  *     responses:
  *       '200':
  *         description: User details
  *         content:
  *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  *             example:
  *               success: true
  *               user: {}
@@ -86,18 +90,7 @@ router.get("/:id", userController.getUser);
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               firstname:
- *                 type: string
- *               lastname:
- *                 type: string
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *               admin:
- *                 type: boolean
+ *             $ref: "#/components/schemas/User"
  *             required:
  *               - firstname
  *               - lastname
@@ -139,14 +132,7 @@ router.post("/", userController.createUser);
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               firstname:
- *                 type: string
- *               lastname:
- *                 type: string
- *               email:
- *                 type: string
+ *             $ref: "#/components/schemas/User"
  *             required:
  *               - firstname
  *               - lastname
@@ -201,6 +187,8 @@ router.put("/:id", userController.updateUser);
  *         description: User deleted
  *         content:
  *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/User"
  *             example:
  *               success: true
  *       '400':
