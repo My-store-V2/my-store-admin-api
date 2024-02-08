@@ -77,6 +77,52 @@ router.get("/:id", userController.getUser);
 
 /**
  * @swagger
+ * /api/users:
+ *   post:
+ *     summary: Create a new user
+ *     description: Create a new user.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstname:
+ *                 type: string
+ *               lastname:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               admin:
+ *                 type: boolean
+ *             required:
+ *               - firstname
+ *               - lastname
+ *               - email
+ *               - password
+ *     responses:
+ *       '201':
+ *         description: New user created
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               user: {}
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Internal Server Error
+ */
+router.post("/", userController.createUser);
+
+/**
+ * @swagger
  * /api/users/{id}:
  *   put:
  *     summary: Update a user
@@ -101,8 +147,10 @@ router.get("/:id", userController.getUser);
  *                 type: string
  *               email:
  *                 type: string
- *               admin:
- *                  type: boolean
+ *             required:
+ *               - firstname
+ *               - lastname
+ *               - email
  *     responses:
  *       '200':
  *         description: User updated
