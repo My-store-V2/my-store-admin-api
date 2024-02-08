@@ -8,11 +8,10 @@
  *         - firstname
  *         - lastname
  *         - email
- *         - password
+ *         - admin
  *       properties:
  *         id:
- *           type: integer
- *           format: int64
+ *           type: string
  *           description: The auto-generated ID of the user
  *         firstname:
  *           type: string
@@ -23,9 +22,6 @@
  *         email:
  *           type: string
  *           description: The email of the user
- *         password:
- *           type: string
- *           description: The password of the user
  *         address:
  *           type: string
  *           description: The address of the user
@@ -36,10 +32,10 @@
  *           type: string
  *           description: The city of the user
  *         phone:
- *           type: integer
- *           description: The phone number of the user
- *         role:
  *           type: string
+ *           description: The phone number of the user
+ *         admin:
+ *           type: boolean
  *           description: The role of the user
  *       example:
  *         id: 1
@@ -51,7 +47,7 @@
  *         zipcode: 75001
  *         city: "Paris"
  *         phone: 123456789
- *         role: "admin"
+ *         admin: false
  */
 
 module.exports = (sequelize, DataTypes) => {
@@ -76,10 +72,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       address: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -93,11 +85,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       phone: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: true,
       },
-      role: {
-        type: DataTypes.STRING,
+      admin: {
+        type: DataTypes.BOOLEAN,
         allowNull: true,
       },
     },

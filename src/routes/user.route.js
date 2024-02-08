@@ -1,8 +1,3 @@
-/* The above code is defining a router for handling API requests related to users. It includes routes
-for getting all users, getting a user by ID, creating a new user, updating a user, and deleting a
-user. Each route has a corresponding controller function that handles the logic for that route. The
-code also includes Swagger documentation for each route, describing the route's purpose, parameters,
-request body, and possible responses. */
 const express = require("express");
 
 const router = express.Router();
@@ -52,7 +47,7 @@ router.get("/", userController.getUsers);
  *       - in: path
  *         name: id
  *         schema:
- *           type: integer
+ *           type: string
  *         required: true
  *         description: ID of the user to retrieve
  *     responses:
@@ -82,50 +77,6 @@ router.get("/:id", userController.getUser);
 
 /**
  * @swagger
- * /api/users:
- *   post:
- *     summary: Create a new user
- *     description: Create a new user.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               firstname:
- *                 type: string
- *               lastname:
- *                 type: string
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *             required:
- *               - firstname
- *               - lastname
- *               - email
- *               - password
- *     responses:
- *       '201':
- *         description: New user created
- *         content:
- *           application/json:
- *             example:
- *               success: true
- *               user: {}
- *       '500':
- *         description: Internal Server Error
- *         content:
- *           application/json:
- *             example:
- *               success: false
- *               message: Internal Server Error
- */
-router.post("/", userController.createUser);
-
-/**
- * @swagger
  * /api/users/{id}:
  *   put:
  *     summary: Update a user
@@ -134,7 +85,7 @@ router.post("/", userController.createUser);
  *       - in: path
  *         name: id
  *         schema:
- *           type: integer
+ *           type: string
  *         required: true
  *         description: ID of the user to update
  *     requestBody:
@@ -150,13 +101,8 @@ router.post("/", userController.createUser);
  *                 type: string
  *               email:
  *                 type: string
- *               password:
- *                 type: string
- *             required:
- *               - firstname
- *               - lastname
- *               - email
- *               - password
+ *               admin:
+ *                  type: boolean
  *     responses:
  *       '200':
  *         description: User updated
@@ -199,7 +145,7 @@ router.put("/:id", userController.updateUser);
  *       - in: path
  *         name: id
  *         schema:
- *           type: integer
+ *           type: string
  *         required: true
  *         description: ID of the user to delete
  *     responses:

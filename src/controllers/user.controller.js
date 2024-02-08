@@ -61,26 +61,6 @@ module.exports = {
     }
   },
 
-  // controller to add a new User
-  createUser: async (req, res) => {
-    try {
-      // create a new User using Sequelize's create() method
-      const newUser = await db.User.create(req.body);
-
-      // return the new User in JSON format
-      return res.status(201).json({
-        results: newUser,
-        success: true,
-      });
-    } catch (err) {
-      // if an error occurs, return a 500 status code with the error message
-      res.status(500).json({
-        success: false,
-        message: err.message,
-      });
-    }
-  },
-
   // controller to update a User
   updateUser: async (req, res) => {
     try {
