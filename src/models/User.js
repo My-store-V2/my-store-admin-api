@@ -38,7 +38,6 @@
  *           type: boolean
  *           description: The role of the user
  *       example:
- *         id: 1
  *         firstname: "John"
  *         lastname: "Doe"
  *         email: "john.doe@gmail.com"

@@ -1,5 +1,4 @@
 const db = require("../models");
-const { use } = require("../routes/user.route");
 
 module.exports = {
     // controller to get all Users
@@ -61,16 +60,26 @@ module.exports = {
     // controller to add a new User
     createUser: async (req, res) => {
         try {
-            // create a new User using Sequelize's create() method
-            const newUser = await db.User.create(req.body);
+            const { email } = req.body;
 
-            // return the new User in JSON format
-            return res.status(201).json({
-                results: newUser,
-                success: true,
-            });
+            // Check if the email already exists in the database
+            const existingUser = await db.User.findOne({ where: { email } });
+            if (existingUser) {
+                return res.status(400).json({
+                    success: false,
+                    message: "User already exists with this email",
+                });
+            }
+
+            // Create the new User
+            await db.User.create(req.body);
+
+            const newUser = await db.User.findOne({ where: { email } });
+
+            // Return the new User's id in JSON format
+            return res.status(201).json({ id: newUser.id, success: true });
         } catch (err) {
-            // if an error occurs, return a 500 status code with the error message
+            // If an error occurs, return a 500 status code with the error message
             res.status(500).json({
                 success: false,
                 message: err.message,
@@ -98,7 +107,7 @@ module.exports = {
 
             // return the updated User in JSON format
             return res.status(200).json({
-                results: user,
+                id: user.id,
                 success: true,
             });
         } catch (err) {

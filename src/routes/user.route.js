@@ -18,10 +18,30 @@ const userController = require("../controllers/user.controller");
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
  *             example:
  *               success: true
- *               results: []
+ *               results:
+ *                 - id: "3a8c1430-c66d-11ee-8370-42010a400005"
+ *                   firstname: "Doe"
+ *                   lastname: "John"
+ *                   email: "john.doe123@example.com"
+ *                   address: "123 Main St"
+ *                   zipcode: 12345
+ *                   city: "Cityville"
+ *                   phone: "+1234567890"
+ *                   admin: false
+ *                 - id: "a38edd6b-c662-11ee-8370-42010a400005"
+ *                   firstname: "string"
+ *                   lastname: "string"
+ *                   email: "string"
+ *                   address: null
+ *                   zipcode: null
+ *                   city: null
+ *                   phone: null
+ *                   admin: null
  *       '404':
  *         description: No users found
  *         content:
@@ -37,14 +57,12 @@ const userController = require("../controllers/user.controller");
  *               success: false
  *               message: Internal Server Error
  */
+
 router.get("/", userController.getUsers);
 
 /**
  * @swagger
  * /api/users/{id}:
- *   components:
- *    schema:
- *           $ref: "#/components/schemas/User"
  *   get:
  *     summary: Get a user by ID
  *     description: Retrieve a user by their ID.
@@ -61,7 +79,16 @@ router.get("/", userController.getUsers);
  *               $ref: '#/components/schemas/User'
  *             example:
  *               success: true
- *               user: {}
+ *               user:
+ *                 id: "a38edd6b-c662-11ee-8370-42010a400005"
+ *                 firstname: "john"
+ *                 lastname: "doe"
+ *                 email: "test@gmail.com"
+ *                 address: "22 rue des fleurs"
+ *                 zipcode: 75001
+ *                 city: "Paris"
+ *                 phone: "0123456789"
+ *                 admin: false
  *       '404':
  *         description: User not found
  *         content:
@@ -77,6 +104,7 @@ router.get("/", userController.getUsers);
  *               success: false
  *               message: Internal Server Error
  */
+
 router.get("/:id", userController.getUser);
 
 /**
@@ -102,8 +130,8 @@ router.get("/:id", userController.getUser);
  *         content:
  *           application/json:
  *             example:
+ *               id : "a38edd6b-c662-11ee-8370-42010a400005"
  *               success: true
- *               user: {}
  *       '500':
  *         description: Internal Server Error
  *         content:
@@ -143,8 +171,8 @@ router.post("/", userController.createUser);
  *         content:
  *           application/json:
  *             example:
+ *               id: "a38edd6b-c662-11ee-8370-42010a400005"
  *               success: true
- *               user: {}
  *       '400':
  *         description: Bad request
  *         content:
