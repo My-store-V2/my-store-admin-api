@@ -62,8 +62,14 @@ module.exports = {
     postProduct: async (req, res) => {
         try {
             // Extract product data from the request body
-            const { name, description, active, thumbnail, packshot, price } =
-                req.body;
+            const {
+                name,
+                description,
+                active,
+                thumbnail,
+                packshot,
+                price,
+            } = req.body;
 
             // Validate the required fields
             if (!name || !price) {
@@ -101,8 +107,14 @@ module.exports = {
     putProduct: async (req, res) => {
         try {
             // Extract product data from the request body
-            const { name, description, active, thumbnail, packshot, price } =
-                req.body;
+            const {
+                name,
+                description,
+                active,
+                thumbnail,
+                packshot,
+                price,
+            } = req.body;
             const productId = req.params.id;
 
             // Validate the required fields
