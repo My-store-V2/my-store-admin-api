@@ -4,7 +4,7 @@ const db = require("../models");
 
 // Function to generate a JWT token containing the user ID
 function generateAuthToken(userId) {
-    return jwt.sign({ userId }, "your_secret_key", { expiresIn: "1h" });
+    return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "1h" });
 }
 
 module.exports = {
