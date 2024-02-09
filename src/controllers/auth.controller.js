@@ -4,7 +4,7 @@ const db = require("../models");
 
 // Fonction pour générer un jeton JWT contenant l'ID de l'utilisateur
 function generateAuthToken(userId) {
-    return jwt.sign({ userId }, "your_secret_key", { expiresIn: "1h" });
+    return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "1h" });
 }
 
 module.exports = {
