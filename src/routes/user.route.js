@@ -19,8 +19,6 @@ const userController = require("../controllers/user.controller");
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
  *                 $ref: '#/components/schemas/User'
  *             example:
  *               success: true
