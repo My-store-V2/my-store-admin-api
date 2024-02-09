@@ -2,9 +2,9 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const db = require("../models");
 
-// Fonction pour générer un jeton JWT contenant l'ID de l'utilisateur
+// Function to generate a JWT token containing the user ID
 function generateAuthToken(userId) {
-    return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    return jwt.sign({ userId }, "your_secret_key", { expiresIn: "1h" });
 }
 
 module.exports = {
@@ -12,7 +12,7 @@ module.exports = {
         try {
             const { email, password } = req.body;
 
-            // Vérifiez si l'utilisateur existe dans la base de données
+            // Check if the user exists in the database
             const user = await db.User.findOne({ where: { email } });
             if (!user) {
                 return res.status(401).json({
@@ -21,7 +21,7 @@ module.exports = {
                 });
             }
 
-            // Vérifiez si le mot de passe est correct
+            // Check if the password is correct
             const validPassword = await bcrypt.compare(password, user.password);
             if (!validPassword) {
                 return res.status(401).json({
@@ -30,10 +30,10 @@ module.exports = {
                 });
             }
 
-            // Si les informations d'identification sont valides, générez un jeton JWT
+            // If the credentials are valid, generate a JWT token
             const token = generateAuthToken(user.id);
 
-            // Retournez le jeton JWT dans la réponse
+            // Return the JWT token in the response
             return res.status(200).json({ success: true, token });
         } catch (err) {
             // Gérer les erreurs
