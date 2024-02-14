@@ -138,6 +138,7 @@ module.exports = {
             // return a 204 status code
             return res.status(204).json({
                 success: true,
+                message: "User successfully deleted",
             });
         } catch (err) {
             // if an error occurs, return a 500 status code with the error message

@@ -12,6 +12,7 @@ const productController = require("../controllers/product.controller");
  *   get:
  *     summary: Get all products
  *     description: Retrieve a list of all products.
+ *     tags: [Products]
  *     responses:
  *       200:
  *         description: Successful response
@@ -64,6 +65,7 @@ router.get("/", productController.getProducts);
  *   get:
  *     summary: Get a product by ID
  *     description: Retrieve a product based on its ID.
+ *     tags: [Products]
  *     parameters:
  *       - in: path
  *         name: id
@@ -124,6 +126,7 @@ router.get("/:id", productController.getProduct);
  *   post:
  *     summary: Create a new product
  *     description: Create a new product with the provided information.
+ *     tags: [Products]
  *     requestBody:
  *       required: true
  *       content:
@@ -172,6 +175,7 @@ router.post("/", productController.postProduct);
  *   put:
  *     summary: Update a product by ID
  *     description: Update a product with the provided information based on its ID.
+ *     tags: [Products]
  *     parameters:
  *       - in: path
  *         name: id
@@ -235,6 +239,7 @@ router.put("/:id", productController.putProduct);
  *   delete:
  *     summary: Delete a product by ID
  *     description: Delete a product based on its ID.
+ *     tags: [Products]
  *     parameters:
  *       - in: path
  *         name: id

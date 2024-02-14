@@ -12,14 +12,13 @@ const userController = require("../controllers/user.controller");
  *   get:
  *     summary: Get all users
  *     description: Retrieve a list of all users.
+ *     tags: [Users]
  *     responses:
  *       '200':
  *         description: A list of users
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
  *                 $ref: '#/components/schemas/User'
  *             example:
  *               success: true
@@ -62,10 +61,14 @@ router.get("/", userController.getUsers);
 
 /**
  * @swagger
+ * tags:
+ *   name: Users
+ *   description: API operations related to users
  * /api/users/{id}:
  *   get:
  *     summary: Get a user by ID
  *     description: Retrieve a user by their ID.
+ *     tags: [Users]
  *     parameters:
  *       - in: path
  *         name: id
@@ -109,10 +112,14 @@ router.get("/:id", userController.getUser);
 
 /**
  * @swagger
+ * tags:
+ *   name: Users
+ *   description: API operations related to users
  * /api/users:
  *   post:
  *     summary: Create a new user
  *     description: Create a new user.
+ *     tags: [Users]
  *     requestBody:
  *       required: true
  *       content:
@@ -144,10 +151,14 @@ router.post("/", userController.createUser);
 
 /**
  * @swagger
+ * tags:
+ *   name: Users
+ *   description: API operations related to users
  * /api/users/{id}:
  *   put:
  *     summary: Update a user
  *     description: Update a user by their ID.
+ *     tags: [Users]
  *     parameters:
  *       - in: path
  *         name: id
@@ -199,10 +210,14 @@ router.put("/:id", userController.updateUser);
 
 /**
  * @swagger
+ * tags:
+ *   name: Users
+ *   description: API operations related to users
  * /api/users/{id}:
  *   delete:
  *     summary: Delete a user
  *     description: Delete a user by their ID.
+ *     tags: [Users]
  *     parameters:
  *       - in: path
  *         name: id
