@@ -34,6 +34,7 @@ module.exports = {
             const token = generateAuthToken(user.id);
 
             // Return the JWT token in the response
+            console.log(token);
             return res.status(200).json({ success: true, token });
         } catch (err) {
             // Gérer les erreurs
