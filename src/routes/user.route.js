@@ -2,7 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 const userController = require("../controllers/user.controller");
-
+const isAdminMiddleware = require("../middlewares/isAdminMiddleware");
 /**
  * @swagger
  * tags:
@@ -57,7 +57,7 @@ const userController = require("../controllers/user.controller");
  *               message: Internal Server Error
  */
 
-router.get("/", userController.getUsers);
+router.get("/", isAdminMiddleware, userController.getUsers);
 
 /**
  * @swagger
@@ -108,7 +108,7 @@ router.get("/", userController.getUsers);
  *               message: Internal Server Error
  */
 
-router.get("/:id", userController.getUser);
+router.get("/:id", isAdminMiddleware, userController.getUser);
 
 /**
  * @swagger
@@ -147,7 +147,7 @@ router.get("/:id", userController.getUser);
  *               success: false
  *               message: Internal Server Error
  */
-router.post("/", userController.createUser);
+router.post("/", isAdminMiddleware, userController.createUser);
 
 /**
  * @swagger
@@ -206,7 +206,7 @@ router.post("/", userController.createUser);
  *               success: false
  *               message: Internal Server Error
  */
-router.put("/:id", userController.updateUser);
+router.put("/:id", isAdminMiddleware, userController.updateUser);
 
 /**
  * @swagger
@@ -256,6 +256,6 @@ router.put("/:id", userController.updateUser);
  *               success: false
  *               message: Internal Server Error
  */
-router.delete("/:id", userController.deleteUser);
+router.delete("/:id", isAdminMiddleware, userController.deleteUser);
 
 module.exports = router;

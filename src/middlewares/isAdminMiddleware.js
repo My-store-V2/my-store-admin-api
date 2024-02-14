@@ -3,8 +3,7 @@ const db = require("../models"); // Supposons que vous ayez déjà configuré Se
 
 const isAdminMiddleware = async (req, res, next) => {
     // Récupérer le token d'authentification depuis les en-têtes de la requête
-    const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzMWZiNjY5NS1jYjQzLTExZWUtODM3MC00MjAxMGE0MDAwMDUiLCJpYXQiOjE3MDc5MjAyMzUsImV4cCI6MTcwNzkyMzgzNX0.LvrIiS1qu6beoTxMgImTPQ5A6Czr0ju9jx12XtagCQg";
+    const token = req.headers.authorization;
 
     if (!token) {
         return res.status(401).json({ message: "Token non fourni" });
@@ -12,7 +11,7 @@ const isAdminMiddleware = async (req, res, next) => {
 
     try {
         // Vérifier si le token est valide et obtenir les informations utilisateur
-        const decoded = jwt.verify(token, "secretOrKey");
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         // Recherchez l'utilisateur dans la base de données en utilisant l'ID décodé
         const user = await db.User.findByPk(decoded.userId);
