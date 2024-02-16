@@ -2,6 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 const productController = require("../controllers/product.controller");
+const isAdminMiddleware = require("../middlewares/isAdminMiddleware");
 
 /**
  * @swagger
@@ -54,7 +55,7 @@ const productController = require("../controllers/product.controller");
  *               message: Internal Server Error
  */
 
-router.get("/", productController.getProducts);
+router.get("/", isAdminMiddleware, productController.getProducts);
 
 /**
  * @swagger
@@ -115,7 +116,7 @@ router.get("/", productController.getProducts);
  *               message: Internal Server Error
  */
 
-router.get("/:id", productController.getProduct);
+router.get("/:id", isAdminMiddleware, productController.getProduct);
 
 /**
  * @swagger
@@ -164,7 +165,7 @@ router.get("/:id", productController.getProduct);
  *               message: Internal Server Error
  */
 
-router.post("/", productController.postProduct);
+router.post("/", isAdminMiddleware, productController.postProduct);
 
 /**
  * @swagger
@@ -279,6 +280,6 @@ router.put("/:id", productController.putProduct);
  *               message: Internal Server Error
  */
 
-router.delete("/:id", productController.deleteProduct);
+router.delete("/:id", isAdminMiddleware, productController.deleteProduct);
 
 module.exports = router;

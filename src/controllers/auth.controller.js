@@ -33,7 +33,6 @@ module.exports = {
             // If the credentials are valid, generate a JWT token
             const token = generateAuthToken(user.id);
 
-            // Return the JWT token in the response
             return res.status(200).json({ success: true, token });
         } catch (err) {
             // Gérer les erreurs
