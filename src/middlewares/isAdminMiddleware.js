@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const db = require("../models"); // Supposons que vous ayez déjà configuré Sequelize et importé le modèle User
+const db = require("../models");
 
 const isAdminMiddleware = async (req, res, next) => {
     // Récupérer le token d'authentification depuis les en-têtes de la requête
@@ -15,8 +15,7 @@ const isAdminMiddleware = async (req, res, next) => {
 
         // Recherchez l'utilisateur dans la base de données en utilisant l'ID décodé
         const user = await db.User.findByPk(decoded.userId);
-        console.log(decoded);
-        console.log(user.admin);
+
         if (!user) {
             return res.status(401).json({ message: "Utilisateur non trouvé" });
         }
