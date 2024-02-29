@@ -26,15 +26,15 @@ const authController = require("../controllers/auth.controller");
  *              firstname:
  *                type: string
  *                description: First name of the user
- *                example: John
+ *                example: Admin
  *              lastname:
  *                type: string
  *                description: Last name of the user
- *                example: Doe
+ *                example: Admin
  *              email:
  *                type: string
  *                description: Email of the user
- *                example: user@example.com
+ *                example: admin@example.com
  *              password:
  *                type: string
  *                description: Password of the user

@@ -44,26 +44,28 @@ module.exports = {
 
     signup: async () => {
         try {
+            const existingAdmin = await db.User.findOne({
+                where: { admin: true },
+            });
+            if (existingAdmin) {
+                return {
+                    status: 400,
+                    success: false,
+                    message: "An admin already exists.",
+                };
+            }
+
             // Définir les données de l'admin directement dans la fonction
             const adminData = {
                 firstname: "Admin",
                 lastname: "Admin",
-                email: "admin@example.com",
+                email: "admin@mystore.com",
                 password: "adminpassword1234",
                 address: "123 Admin Street",
                 zipcode: "12345",
                 city: "AdminCity",
                 phone: "1234567890",
             };
-
-            // Vérifier si l'admin existe déjà dans la base de données
-            const adminExists = await db.User.findOne({
-                where: { email: adminData.email },
-            });
-            if (adminExists) {
-                console.log("Admin already exists.");
-                return;
-            }
 
             // Hasher le mot de passe
             const salt = await bcrypt.genSalt(10);
@@ -76,10 +78,13 @@ module.exports = {
                 admin: true, // Définir admin sur true
             });
 
-            console.log("Admin successfully registered");
+            return {
+                status: 201,
+                success: true,
+                message: "Admin successfully registered",
+            };
         } catch (err) {
-            // Gérer les erreurs
-            console.error("Error:", err.message);
+            return { status: 500, success: false, message: err.message };
         }
     },
 };
