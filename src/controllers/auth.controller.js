@@ -42,17 +42,16 @@ module.exports = {
         }
     },
 
-    signup: async () => {
+    signup: async (req, res) => {
         try {
             const existingAdmin = await db.User.findOne({
                 where: { admin: true },
             });
             if (existingAdmin) {
-                return {
-                    status: 400,
+                return res.status(400).json({
                     success: false,
                     message: "An admin already exists.",
-                };
+                });
             }
 
             // Définir les données de l'admin directement dans la fonction
@@ -78,13 +77,14 @@ module.exports = {
                 admin: true, // Définir admin sur true
             });
 
-            return {
-                status: 201,
+            res.status(201).json({
                 success: true,
                 message: "Admin successfully registered",
-            };
+            });
         } catch (err) {
-            return { status: 500, success: false, message: err.message };
+            return res
+                .status(500)
+                .json({ success: false, message: err.message });
         }
     },
 };
