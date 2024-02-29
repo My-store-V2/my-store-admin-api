@@ -13,12 +13,11 @@ const isAdminMiddleware = async (req, res, next) => {
 
     // Extraire le token en supprimant la partie "Bearer "
     const token = authHeader.split(" ")[1];
-    console.log(token);
 
     try {
         // Vérifier si le token est valide et obtenir les informations utilisateur
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log(decoded);
+
         // Recherchez l'utilisateur dans la base de données en utilisant l'ID décodé
         const user = await db.User.findByPk(decoded.userId);
 
@@ -34,7 +33,7 @@ const isAdminMiddleware = async (req, res, next) => {
         }
 
         // Stocker les informations utilisateur dans l'objet de requête pour une utilisation ultérieure
-        req.user = user;
+        req.user = decoded.userId;
 
         // Continuer vers la prochaine étape du middleware
         next();
