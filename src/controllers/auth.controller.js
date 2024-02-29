@@ -42,53 +42,44 @@ module.exports = {
         }
     },
 
-    signup: async (req, res) => {
+    signup: async () => {
         try {
-            const {
-                firstname,
-                lastname,
-                email,
-                password,
-                address,
-                zipcode,
-                city,
-                phone,
-            } = req.body;
+            // Définir les données de l'admin directement dans la fonction
+            const adminData = {
+                firstname: "Admin",
+                lastname: "Admin",
+                email: "admin@example.com",
+                password: "adminpassword1234",
+                address: "123 Admin Street",
+                zipcode: "12345",
+                city: "AdminCity",
+                phone: "1234567890",
+            };
 
-            // Check if the user already exists in the database
-            const userExists = await db.User.findOne({ where: { email } });
-            if (userExists) {
-                return res
-                    .status(400)
-                    .json({ success: false, message: "User already exists." });
+            // Vérifier si l'admin existe déjà dans la base de données
+            const adminExists = await db.User.findOne({
+                where: { email: adminData.email },
+            });
+            if (adminExists) {
+                console.log("Admin already exists.");
+                return;
             }
 
-            // Hash the password
+            // Hasher le mot de passe
             const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(password, salt);
+            const hashedPassword = await bcrypt.hash(adminData.password, salt);
 
-            // Create a new user
+            // Créer un nouvel utilisateur admin
             await db.User.create({
-                firstname,
-                lastname,
-                email,
+                ...adminData,
                 password: hashedPassword,
-                address,
-                zipcode,
-                city,
-                phone,
+                admin: true, // Définir admin sur true
             });
 
-            // Return the new user in the response
-            return res.status(201).json({
-                success: true,
-                message: "User successfully registered",
-            });
+            console.log("Admin successfully registered");
         } catch (err) {
-            // Handle errors
-            return res
-                .status(500)
-                .json({ success: false, message: err.message });
+            // Gérer les erreurs
+            console.error("Error:", err.message);
         }
     },
 };
