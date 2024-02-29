@@ -59,7 +59,7 @@ module.exports = {
                 firstname: "Admin",
                 lastname: "Admin",
                 email: "admin@mystore.com",
-                password: "adminpassword1234",
+                password: "adminpassword",
                 address: "123 Admin Street",
                 zipcode: "12345",
                 city: "AdminCity",
