@@ -107,7 +107,7 @@ module.exports = {
 
             // return the updated User in JSON format
             return res.status(200).json({
-                id: user.id,
+                results: user,
                 success: true,
             });
         } catch (err) {

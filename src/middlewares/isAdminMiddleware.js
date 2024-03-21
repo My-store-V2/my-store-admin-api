@@ -4,7 +4,6 @@ const db = require("../models");
 const isAdminMiddleware = async (req, res, next) => {
     // Récupérer le token d'authentification depuis les en-têtes de la requête
     const authHeader = req.headers.authorization;
-    console.log(authHeader);
 
     // Vérifier si l'en-tête Authorization est présent
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
