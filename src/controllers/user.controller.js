@@ -136,7 +136,7 @@ module.exports = {
             await user.destroy();
 
             // return a 204 status code
-            return res.status(204).json({
+            return res.status(200).json({
                 success: true,
                 message: "User successfully deleted",
             });

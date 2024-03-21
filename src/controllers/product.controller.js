@@ -1,5 +1,5 @@
 const db = require("../models");
-const fetch = require('node-fetch');
+const fetch = require("node-fetch");
 
 module.exports = {
     // controller to get all products
@@ -74,8 +74,14 @@ module.exports = {
                 price,
             } = req.body;
 
-            // Validate the required fields
-            if (!name || !price || !thumbnail_name || !thumbnail_base64 || !packshot_name || !packshot_base64) {
+            if (
+                !name ||
+                !price ||
+                !thumbnail_name ||
+                !thumbnail_base64 ||
+                !packshot_name ||
+                !packshot_base64
+            ) {
                 return res.status(400).json({
                     success: false,
                     message: "Name and price are required fields",
@@ -89,16 +95,22 @@ module.exports = {
                 thumbnail: null,
                 packshot: null,
                 price,
-            }
+            };
 
             if (thumbnail_base64) {
-                const thumbnail = await uploadImage(thumbnail_base64, thumbnail_name)
-                console.log(thumbnail)
+                const thumbnail = await uploadImage(
+                    thumbnail_base64,
+                    thumbnail_name
+                );
+                console.log(thumbnail);
                 newProductObj.thumbnail = thumbnail;
             }
             if (packshot_base64) {
-                const packshot = await uploadImage(packshot_base64, packshot_name)
-                console.log(packshot)
+                const packshot = await uploadImage(
+                    packshot_base64,
+                    packshot_name
+                );
+                console.log(packshot);
                 newProductObj.packshot = packshot;
             }
 
@@ -108,7 +120,7 @@ module.exports = {
             // Return the newly created product in JSON format
             return res.status(201).json({
                 success: true,
-                results: newProduct.id,
+                results: newProduct,
                 message: `Product ${newProduct.id} successfully created`,
             });
         } catch (err) {
@@ -129,19 +141,25 @@ module.exports = {
                 thumbnail_base64,
                 packshot_name,
                 packshot_base64,
-                price
+                price,
             } = req.body;
             const productId = req.params.id;
 
             let newProduct = req.body;
             if (thumbnail_base64) {
-                const thumbnail = await uploadImage(thumbnail_base64, thumbnail_name)
-                console.log(thumbnail)
+                const thumbnail = await uploadImage(
+                    thumbnail_base64,
+                    thumbnail_name
+                );
+                console.log(thumbnail);
                 newProduct.thumbnail = thumbnail;
             }
             if (packshot_base64) {
-                const packshot = await uploadImage(packshot_base64, packshot_name)
-                console.log(packshot)
+                const packshot = await uploadImage(
+                    packshot_base64,
+                    packshot_name
+                );
+                console.log(packshot);
 
                 newProduct.packshot = packshot;
             }
@@ -170,6 +188,7 @@ module.exports = {
             // Return the updated product in JSON format
             return res.status(200).json({
                 success: true,
+                results: existingProduct,
                 message: `Product ${productId} has been successfully updated`,
             });
         } catch (err) {
@@ -224,7 +243,7 @@ module.exports = {
 const uploadImage = async (base64, name) => {
     try {
         const response = await fetch(process.env.FILE_UPLOAD_URL, {
-            method: 'POST',
+            method: "POST",
             body: JSON.stringify({
                 file_name: name,
                 file_content_base64: base64,
@@ -232,14 +251,13 @@ const uploadImage = async (base64, name) => {
         });
         const data = await response.json();
 
-
         if (!response.ok) {
             throw new Error(data.message);
         }
 
         return data.url;
     } catch (err) {
-        console.log("error uploading image : ", err)
+        console.log("error uploading image : ", err);
         throw new Error(err);
     }
 };
