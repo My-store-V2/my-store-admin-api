@@ -54,6 +54,4 @@ Object.keys(db).forEach((modelName) => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-db.Wishlist.belongsTo(db.User, { foreignKey: 'id_user', as: 'user' });
-
 module.exports = db;

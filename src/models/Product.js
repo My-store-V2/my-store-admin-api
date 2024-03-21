@@ -31,6 +31,10 @@
  *           type: number
  *           format: int
  *           description: The price of the product
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: The date and time when the product was added
  *       example:
  *         id: 1
  *         name: "Sample Product"
@@ -39,6 +43,7 @@
  *         thumbnail: "https://example.com/thumbnail.jpg"
  *         packshot: "https://example.com/packshot.jpg"
  *         price: 200
+ *         createdAt: "2022-02-02T12:34:56.789Z"
  */
 
 module.exports = (sequelize, DataTypes) => {

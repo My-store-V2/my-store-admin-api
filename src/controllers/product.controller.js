@@ -1,4 +1,5 @@
 const db = require("../models");
+const fetch = require('node-fetch');
 
 module.exports = {
     // controller to get all products
@@ -59,91 +60,186 @@ module.exports = {
         }
     },
 
-    // putProduct: async (req, res) => {
-    //     try {
-    //         // Extract product data from the request body
-    //         const { name, description, active, thumbnail, packshot, price } =
-    //             req.body;
-    //         const productId = req.params.id;
+    postProduct: async (req, res) => {
+        try {
+            // Extract product data from the request body
+            const {
+                name,
+                description,
+                active,
+                thumbnail_name,
+                thumbnail_base64,
+                packshot_name,
+                packshot_base64,
+                price,
+            } = req.body;
 
-    //         // Validate the required fields
-    //         if (!productId || !name || !price) {
-    //             return res.status(400).json({
-    //                 success: false,
-    //                 message: "Product ID, name, and price are required fields",
-    //             });
-    //         }
+            // Validate the required fields
+            if (!name || !price || !thumbnail_name || !thumbnail_base64 || !packshot_name || !packshot_base64) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Name and price are required fields",
+                });
+            }
 
-    //         // Check if the product with the given ID exists
-    //         const existingProduct = await db.Product.findByPk(productId);
+            var newProductObj = {
+                name,
+                description,
+                active,
+                thumbnail: null,
+                packshot: null,
+                price,
+            }
 
-    //         if (!existingProduct) {
-    //             return res.status(404).json({
-    //                 success: false,
-    //                 message: "Product not found",
-    //             });
-    //         }
+            if (thumbnail_base64) {
+                const thumbnail = await uploadImage(thumbnail_base64, thumbnail_name)
+                console.log(thumbnail)
+                newProductObj.thumbnail = thumbnail;
+            }
+            if (packshot_base64) {
+                const packshot = await uploadImage(packshot_base64, packshot_name)
+                console.log(packshot)
+                newProductObj.packshot = packshot;
+            }
 
-    //         // Update the existing product using Sequelize's update() method
-    //         await existingProduct.update({
-    //             name,
-    //             description,
-    //             active,
-    //             thumbnail,
-    //             packshot,
-    //             price,
-    //         });
+            // Create a new product using Sequelize's create() method
+            const newProduct = await db.Product.create(newProductObj);
 
-    //         // Return the updated product in JSON format
-    //         return res.status(200).json({
-    //             success: true,
-    //             message: `Product ${productId} has been successfully updated`,
-    //         });
-    //     } catch (err) {
-    //         // If an error occurs, return a 500 status code with the error message
-    //         res.status(500).json({
-    //             success: false,
-    //             message: err.message,
-    //         });
-    //     }
-    // },
+            // Return the newly created product in JSON format
+            return res.status(201).json({
+                success: true,
+                results: newProduct.id,
+                message: `Product ${newProduct.id} successfully created`,
+            });
+        } catch (err) {
+            // If an error occurs, return a 500 status code with the error message
+            res.status(500).json({
+                success: false,
+                message: err.message,
+            });
+        }
+    },
 
-    // deleteProduct: async (req, res) => {
-    //     try {
-    //         const productId = req.params.id;
+    putProduct: async (req, res) => {
+        try {
+            // Extract product data from the request body
+            const {
+                name,
+                thumbnail_name,
+                thumbnail_base64,
+                packshot_name,
+                packshot_base64,
+                price
+            } = req.body;
+            const productId = req.params.id;
 
-    //         // Validate if the product ID is provided
-    //         if (!productId) {
-    //             return res.status(400).json({
-    //                 success: false,
-    //                 message: "Product ID is required",
-    //             });
-    //         }
+            let newProduct = req.body;
+            if (thumbnail_base64) {
+                const thumbnail = await uploadImage(thumbnail_base64, thumbnail_name)
+                console.log(thumbnail)
+                newProduct.thumbnail = thumbnail;
+            }
+            if (packshot_base64) {
+                const packshot = await uploadImage(packshot_base64, packshot_name)
+                console.log(packshot)
 
-    //         // Check if the product with the given ID exists
-    //         const existingProduct = await db.Product.findByPk(productId);
+                newProduct.packshot = packshot;
+            }
 
-    //         if (!existingProduct) {
-    //             return res.status(404).json({
-    //                 success: false,
-    //                 message: "Product not found",
-    //             });
-    //         }
+            // Validate the required fields
+            if (!productId || !name || !price) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Product ID, name, and price are required fields",
+                });
+            }
 
-    //         // Delete the existing product using Sequelize's destroy() method
-    //         await existingProduct.destroy();
+            // Check if the product with the given ID exists
+            const existingProduct = await db.Product.findByPk(productId);
 
-    //         // Return a success message
-    //         return res.status(200).json({
-    //             success: true,
-    //             message: `Product ${productId} successfully deleted`,
-    //         });
-    //     } catch (err) {
-    //         // If an error occurs, return a 500 status code with the error message
-    //         res.status(500).json({
-    //             success: false,
-    //             message: err.message,
-    //         });
-    //     }
-    // },
+            if (!existingProduct) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Product not found",
+                });
+            }
+
+            // Update the existing product using Sequelize's update() method
+            await existingProduct.update(newProduct);
+
+            // Return the updated product in JSON format
+            return res.status(200).json({
+                success: true,
+                message: `Product ${productId} has been successfully updated`,
+            });
+        } catch (err) {
+            // If an error occurs, return a 500 status code with the error message
+            res.status(500).json({
+                success: false,
+                message: err.message,
+            });
+        }
+    },
+
+    deleteProduct: async (req, res) => {
+        try {
+            const productId = req.params.id;
+
+            // Validate if the product ID is provided
+            if (!productId) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Product ID is required",
+                });
+            }
+
+            // Check if the product with the given ID exists
+            const existingProduct = await db.Product.findByPk(productId);
+
+            if (!existingProduct) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Product not found",
+                });
+            }
+
+            // Delete the existing product using Sequelize's destroy() method
+            await existingProduct.destroy();
+
+            // Return a success message
+            return res.status(200).json({
+                success: true,
+                message: `Product ${productId} successfully deleted`,
+            });
+        } catch (err) {
+            // If an error occurs, return a 500 status code with the error message
+            res.status(500).json({
+                success: false,
+                message: err.message,
+            });
+        }
+    },
+};
+
+const uploadImage = async (base64, name) => {
+    try {
+        const response = await fetch(process.env.FILE_UPLOAD_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+                file_name: name,
+                file_content_base64: base64,
+            }),
+        });
+        const data = await response.json();
+
+
+        if (!response.ok) {
+            throw new Error(data.message);
+        }
+
+        return data.url;
+    } catch (err) {
+        console.log("error uploading image : ", err)
+        throw new Error(err);
+    }
 };
