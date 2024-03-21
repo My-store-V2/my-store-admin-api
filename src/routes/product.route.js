@@ -229,7 +229,7 @@ router.post("/", isAdminMiddleware, productController.postProduct);
  *               message: Internal Server Error
  */
 
-router.put("/:id", productController.putProduct);
+router.put("/:id", isAdminMiddleware, productController.putProduct);
 
 /**
  * @swagger

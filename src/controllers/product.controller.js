@@ -62,14 +62,8 @@ module.exports = {
     postProduct: async (req, res) => {
         try {
             // Extract product data from the request body
-            const {
-                name,
-                description,
-                active,
-                thumbnail,
-                packshot,
-                price,
-            } = req.body;
+            const { name, description, active, thumbnail, packshot, price } =
+                req.body;
 
             // Validate the required fields
             if (!name || !price) {
@@ -92,7 +86,7 @@ module.exports = {
             // Return the newly created product in JSON format
             return res.status(201).json({
                 success: true,
-                results: newProduct.id,
+                results: newProduct,
                 message: `Product ${newProduct.id} successfully created`,
             });
         } catch (err) {
@@ -107,23 +101,9 @@ module.exports = {
     putProduct: async (req, res) => {
         try {
             // Extract product data from the request body
-            const {
-                name,
-                description,
-                active,
-                thumbnail,
-                packshot,
-                price,
-            } = req.body;
+            const { name, description, active, thumbnail, packshot, price } =
+                req.body;
             const productId = req.params.id;
-
-            // Validate the required fields
-            if (!productId || !name || !price) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Product ID, name, and price are required fields",
-                });
-            }
 
             // Check if the product with the given ID exists
             const existingProduct = await db.Product.findByPk(productId);
@@ -148,6 +128,7 @@ module.exports = {
             // Return the updated product in JSON format
             return res.status(200).json({
                 success: true,
+                results: existingProduct,
                 message: `Product ${productId} has been successfully updated`,
             });
         } catch (err) {
