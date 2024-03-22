@@ -4,7 +4,7 @@ const User = require('../models/User');
  * @swagger
  * components:
  *   schemas:
- *     Order:
+ *     Orders:
  *       type: object
  *       required:
  *         - user_id   
@@ -55,7 +55,7 @@ const User = require('../models/User');
  */
 
 module.exports = (sequelize, DataTypes) => {
-  const Order = sequelize.define(
+  const Orders = sequelize.define(
     'Orders',
     {
       id: {
@@ -64,7 +64,7 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
       },
       user_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.TEXT,
         allowNull: false,
         references: {
           model: User, // Assuming Client is the Sequelize model for clients
@@ -101,10 +101,10 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      tableName: 'Order',
-      timestamps: true,
+      tableName: 'Orders',
+      timestamps: false,
     }
   );
 
-  return Order;
+  return Orders;
 };
