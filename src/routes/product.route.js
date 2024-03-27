@@ -67,10 +67,7 @@ router.get("/", isAdminMiddleware, productController.getProducts);
  *     summary: Get a product by ID
  *     description: Retrieve a product based on its ID.
  *     tags: [Products]
- *     parameters:
- *       - in: path
  *         name: id
- *         required: true
  *         description: Numeric ID of the product to retrieve.
  *         schema:
  *           type: integer
