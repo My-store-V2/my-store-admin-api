@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require("../models/User");
 
 /**
  * @swagger
@@ -7,7 +7,7 @@ const User = require('../models/User');
  *     Orders:
  *       type: object
  *       required:
- *         - user_id   
+ *         - user_id
  *         - order_date
  *         - delivery_mode
  *         - total_price
@@ -55,63 +55,66 @@ const User = require('../models/User');
  */
 
 module.exports = (sequelize, DataTypes) => {
-  const Orders = sequelize.define(
-    'Orders',
-    {
-      id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      user_id: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-        references: {
-          model: User, // Assuming Client is the Sequelize model for clients
-          key: 'id',
+    const Orders = sequelize.define(
+        "Orders",
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+            },
+            user_id: {
+                type: DataTypes.TEXT,
+                allowNull: false,
+                references: {
+                    model: User, // Assuming Client is the Sequelize model for clients
+                    key: "id",
+                },
+            },
+            order_date: {
+                type: DataTypes.DATE,
+                allowNull: true,
+            },
+            status: {
+                type: DataTypes.TEXT,
+                allowNull: true,
+            },
+            delivery_mode: {
+                type: DataTypes.TEXT,
+                allowNull: true,
+            },
+            delivery_address: {
+                type: DataTypes.TEXT,
+                allowNull: true,
+            },
+            delivery_city: {
+                type: DataTypes.TEXT,
+                allowNull: true,
+            },
+            delivery_zipcode: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+            },
+            total_price: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+            },
         },
-      },
-      order_date: {
-        type: DataTypes.DATE,
-        allowNull: true,
-      },
-      status: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-      },
-      delivery_mode: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-      },      
-      delivery_address: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-      },
-      delivery_city: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-      },
-      delivery_zipcode: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      total_price: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-    },
-    {
-      tableName: 'Orders',
-      timestamps: false,
-    }
-  );
-  Orders.associate = (models) => {
-    Orders.belongsTo(models.User, {
-        through: "UserOrders",
-        as: "users",
-        foreignKey: "user_id",
-        other_key: "id_user",
-    }); // Cart appartient à Product
-  };
-  return Orders;
+        {
+            tableName: "Orders",
+            timestamps: false,
+        }
+    );
+    Orders.associate = (models) => {
+        Orders.belongsTo(models.User, {
+            foreignKey: "user_id",
+            as: "users",
+        }); // Orders appartient à User
+        Orders.hasMany(models.Order_Details, {
+            foreignKey: "order_id",
+            as: "order_details",
+        }); // Orders a plusieurs Order_Details
+    };
+
+    return Orders;
 };
