@@ -184,4 +184,6 @@ router.get("/:id", isAdminMiddleware, orderController.getOrderDetail);
 
 router.get("/user/:id", isAdminMiddleware, orderController.getOrderOfUser);
 
+router.put("/:id", isAdminMiddleware, orderController.refundedOrder);
+
 module.exports = router;

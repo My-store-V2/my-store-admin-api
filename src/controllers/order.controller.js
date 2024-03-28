@@ -107,4 +107,55 @@ module.exports = {
             return res.status(500).json({ message: err.message });
         }
     },
+
+    refundedOrder: async (req, res, next) => {
+        const orderId = req.params.id;
+        try {
+            const order = await db.Orders.findByPk(orderId);
+            
+            if (!order) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Order not found",
+                });
+            }
+    
+            const ordersRefunded = await db.Orders.findAll({
+                where: { 
+                    id: orderId,
+                    status: "refunded on demand" 
+                },
+            });
+    
+            if (ordersRefunded.length === 0) {
+                return res.status(500).json({
+                    success: false,
+                    message: "Error: No orders found requesting refund",
+                });
+            }
+    
+            await db.Orders.update(
+                { status: "refunded" }, // Mettre "refunded" comme nouveau statut
+                { where: { id: orderId } }
+            );
+
+           
+    
+            return res.status(200).json({
+                success: true,
+                message: "Order status updated to 'refunded' successfully",
+            });
+    
+        } catch (error) {
+            console.error(
+                "Error updating order status:",
+                error
+            );
+            return res.status(500).json({
+                success: false,
+                message: "Error updating order status",
+                error: error.message // Envoyer le message d'erreur pour le débogage
+            });
+        }
+    }
 };
