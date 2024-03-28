@@ -94,11 +94,15 @@ module.exports = {
             const ordersInfo = await db.Orders.findAll({
                 where: { id: orderId },
             });
+            const usersInfo = await db.User.findOne({
+                where: { id: ordersInfo[0].user_id },
+            });
 
             // Renvoyer les détails de commande et les informations de commande séparément
             const finalResult = {
                 results: orderDetails,
                 orders: ordersInfo,
+                user: usersInfo,
                 success: true,
             };
 
