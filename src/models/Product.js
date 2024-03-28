@@ -88,5 +88,13 @@ module.exports = (sequelize, DataTypes) => {
         }
     );
 
+    Product.associate = (models) => {
+        Product.belongsToMany(models.Order_Details, {
+            through: "OrderDetailsProduct",
+            as: "orderDetails",
+            foreignKey: "product_id",
+        });
+    };
+
     return Product;
 };
