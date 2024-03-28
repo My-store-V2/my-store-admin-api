@@ -105,6 +105,13 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false,
     }
   );
-
+  Orders.associate = (models) => {
+    Orders.belongsTo(models.User, {
+        through: "UserOrders",
+        as: "users",
+        foreignKey: "user_id",
+        other_key: "id_user",
+    }); // Cart appartient à Product
+  };
   return Orders;
 };
