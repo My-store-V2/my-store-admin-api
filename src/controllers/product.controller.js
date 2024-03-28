@@ -1,5 +1,4 @@
 const db = require("../models");
-const fetch = require("node-fetch");
 
 module.exports = {
     // controller to get all products
