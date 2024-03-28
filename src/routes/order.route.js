@@ -136,7 +136,6 @@ router.get("/", isAdminMiddleware, orderController.getOrders);
  *                 message: Internal Server Error
  */
 
-
 router.get("/:id", isAdminMiddleware, orderController.getOrderDetail);
 
 /**
@@ -171,7 +170,7 @@ router.get("/:id", isAdminMiddleware, orderController.getOrderDetail);
  *             application/json:
  *               example:
  *                 success: false
- *                 message: User not found 
+ *                 message: User not found
  *         '500':
  *           description: Internal Server Error
  *           content:
@@ -181,7 +180,8 @@ router.get("/:id", isAdminMiddleware, orderController.getOrderDetail);
  *                 message: Internal Server Error
  */
 
-
 router.get("/user/:id", isAdminMiddleware, orderController.getOrderOfUser);
+
+router.put("/:id", isAdminMiddleware, orderController.refundedOrder);
 
 module.exports = router;

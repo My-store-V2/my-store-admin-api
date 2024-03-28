@@ -8,6 +8,8 @@ const config = {
     password: process.env.DB_PWD,
     db_port: process.env.DB_PORT,
     host: process.env.DB_HOST,
+    gmail: process.env.G_MAIL,
+    gpwd: process.env.G_PWD,
     dialect: "mysql",
 };
 module.exports = config;
