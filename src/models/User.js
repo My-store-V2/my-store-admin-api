@@ -101,6 +101,14 @@ module.exports = (sequelize, DataTypes) => {
             timestamps: false,
         }
     );
+    User.associate = (models) => {
+        User.belongsToMany(models.Orders, {
+            through: "OrdersUser",
+            as: "Orders",
+            foreignKey: "user_id",
+            otherKey: "id_user",
+        });
+    };
 
     return User;
 };

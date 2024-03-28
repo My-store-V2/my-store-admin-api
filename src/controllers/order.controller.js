@@ -7,17 +7,26 @@ module.exports = {
 
         try {
     
-            const orders = await db.Orders.findAll();
+            
+            const ordersWithUsers = await db.Orders.findAll({
+                include: [{
+                    model: db.User,
+                    as: "users", // Utilisez l'alias spécifié dans votre association
+                }],
+            });
     
-            if (orders.length === 0) {
+
+            
+            if (ordersWithUsers.length === 0) {
                 return res.status(404).json({
                     success: false,
                     message: "No orders found",
                 });
             }
-    
+
+            
             return res.status(200).json({
-            results: orders,
+            results: ordersWithUsers,
             success: true,
             });
     
