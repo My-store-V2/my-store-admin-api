@@ -3,20 +3,35 @@ const cors = require("cors");
 const config = require("./config");
 const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerUI = require("swagger-ui-express");
+const Sequelize = require("sequelize");
 
 const app = express();
 
 // parse json request body
 app.use(express.json());
 
+const sequelize = new Sequelize(
+    config.database,
+    config.username,
+    config.password,
+    {
+        port: config.db_port,
+        host: config.host,
+        dialect: config.dialect,
+        dialectOptions: {
+            connectTimeout: 60000,
+        },
+    }
+);
+
 // Swagger options
 const swaggerOptions = {
     definition: {
         openapi: "3.0.1",
         info: {
-            title: "Node API template",
-            version: "1.0.0",
-            description: "A sample Api",
+            title: "Admin API template for Products",
+            version: "1.0.1",
+            description: "Products admin api documentation lol",
         },
         servers: [
             {
@@ -24,12 +39,12 @@ const swaggerOptions = {
             },
         ],
     },
-    apis: ["./routes/*.js"],
+    apis: ["src/routes/*.js", "src/models/*.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
-
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+
 // parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));
 
@@ -45,15 +60,27 @@ app.use(express.static(__dirname + "/public"));
 
 // initial route
 app.get("/", (req, res) => {
-    res.send({ message: "Welcome to app-store-api application." });
+    res.send({ message: "Welcome to my-store-admin-api." });
 });
 
 // api routes prefix
-app.use("/api", require("./routes/sampleRoutes"));
+app.use("/api", require("./routes/index"));
 
 // run server
+
+sequelize
+    .sync()
+    .then(() => {
+        console.log("Database Synchronised");
+    })
+    .catch((err) => {
+        console.error("database synchronisation error :", err);
+    });
+
 app.listen(config.port, () => {
-    console.log("server launch");
+    console.log(
+        `Server launch on http://localhost:${config.port}\nTo see the api-docs in on http://localhost:${config.port}/api-docs`
+    );
 });
 
 module.exports = app;
