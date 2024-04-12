@@ -135,4 +135,41 @@ router.post("/signup", authController.signup);
  */
 router.post("/signin", authController.signin);
 
+/**
+ * @swagger
+ * /api/auth/session:
+ *  get:
+ *    summary: Check if user token is valid
+ *    description: Check if the user token is valid and return the user information.
+ *    tags: [Auth]
+ *    security:
+ *      - bearerAuth: []
+ *    responses:
+ *      200:
+ *        description: User token is valid
+ *        content:
+ *          application/json:
+ *            example:
+ *              success: true
+ *              message: User token is valid
+ *              data: {
+ *                token: "Bearer Zsjhbxjhsbchjbsjchbjs",
+ *              }
+ *      401:
+ *        description: Unauthorized
+ *        content:
+ *          application/json:
+ *            example:
+ *              success: false
+ *              message: Invalid token
+ *      500:
+ *        description: Internal Server Error
+ *        content:
+ *          application/json:
+ *            example:
+ *              success: false
+ *              message: Internal Server Error
+ */
+router.get("/session", authController.session);
+
 module.exports = router;
