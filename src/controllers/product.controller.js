@@ -1,4 +1,6 @@
 const db = require("../models");
+const path = require("path");
+const fs = require("fs");
 
 module.exports = {
     // controller to get all products
@@ -61,141 +63,106 @@ module.exports = {
 
     postProduct: async (req, res) => {
         try {
-            // Extract product data from the request body
-            const {
-                name,
-                description,
-                active,
-                thumbnail_name,
-                thumbnail_base64,
-                packshot_name,
-                packshot_base64,
-                price,
-            } = req.body;
-
-            if (
-                !name ||
-                !price ||
-                !thumbnail_name ||
-                !thumbnail_base64 ||
-                !packshot_name ||
-                !packshot_base64
-            ) {
+            const { name, description, active, price } = req.body;
+            const activeBool = active === "true"; // convert to boolean
+            const priceNum = parseFloat(price); // ensure price is a floating point number
+            if (!name || isNaN(priceNum)) {
                 return res.status(400).json({
                     success: false,
                     message: "Name and price are required fields",
                 });
             }
 
-            var newProductObj = {
+            const existingProduct = await db.Product.findOne({
+                where: { name },
+            });
+            if (existingProduct) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Product already exists",
+                });
+            }
+
+            let thumbnailUrl = null,
+                packshotUrl = null;
+            if (req.files) {
+                if (req.files.thumbnail) {
+                    thumbnailUrl = await processFile(req.files.thumbnail[0]);
+                }
+                if (req.files.packshot) {
+                    packshotUrl = await processFile(req.files.packshot[0]);
+                }
+            }
+
+            const newProduct = await db.Product.create({
                 name,
                 description,
-                active,
-                thumbnail: null,
-                packshot: null,
-                price,
-            };
+                active: activeBool,
+                price: priceNum,
+                thumbnail: thumbnailUrl,
+                packshot: packshotUrl,
+            });
 
-            if (thumbnail_base64) {
-                const thumbnail = await uploadImage(
-                    thumbnail_base64,
-                    thumbnail_name
-                );
-                console.log(thumbnail);
-                newProductObj.thumbnail = thumbnail;
-            }
-            if (packshot_base64) {
-                const packshot = await uploadImage(
-                    packshot_base64,
-                    packshot_name
-                );
-                console.log(packshot);
-                newProductObj.packshot = packshot;
-            }
+            clearUploadsDirectory();
 
-            // Create a new product using Sequelize's create() method
-            const newProduct = await db.Product.create(newProductObj);
-
-            // Return the newly created product in JSON format
-            return res.status(201).json({
+            res.status(201).json({
                 success: true,
                 results: newProduct,
                 message: `Product ${newProduct.id} successfully created`,
             });
         } catch (err) {
-            // If an error occurs, return a 500 status code with the error message
-            res.status(500).json({
-                success: false,
-                message: err.message,
-            });
+            res.status(500).json({ success: false, message: err.message });
         }
     },
 
     putProduct: async (req, res) => {
         try {
-            // Extract product data from the request body
-            const {
-                name,
-                thumbnail_name,
-                thumbnail_base64,
-                packshot_name,
-                packshot_base64,
-                price,
-            } = req.body;
-            const productId = req.params.id;
+            const { name, description, active, price } = req.body;
+            const productId = parseInt(req.params.id);
 
-            let newProduct = req.body;
-            if (thumbnail_base64) {
-                const thumbnail = await uploadImage(
-                    thumbnail_base64,
-                    thumbnail_name
-                );
-                console.log(thumbnail);
-                newProduct.thumbnail = thumbnail;
-            }
-            if (packshot_base64) {
-                const packshot = await uploadImage(
-                    packshot_base64,
-                    packshot_name
-                );
-                console.log(packshot);
-
-                newProduct.packshot = packshot;
-            }
-
-            // Validate the required fields
-            if (!productId || !name || !price) {
+            if (isNaN(productId)) {
                 return res.status(400).json({
                     success: false,
-                    message: "Product ID, name, and price are required fields",
+                    message: "Product ID is required",
                 });
             }
 
-            // Check if the product with the given ID exists
-            const existingProduct = await db.Product.findByPk(productId);
-
-            if (!existingProduct) {
-                return res.status(404).json({
-                    success: false,
-                    message: "Product not found",
-                });
+            const product = await db.Product.findByPk(productId);
+            if (!product) {
+                return res
+                    .status(404)
+                    .json({ success: false, message: "Product not found" });
             }
 
-            // Update the existing product using Sequelize's update() method
-            await existingProduct.update(newProduct);
+            let thumbnailUrl = null,
+                packshotUrl = null;
+            if (req.files) {
+                if (req.files.thumbnail) {
+                    thumbnailUrl = await processFile(req.files.thumbnail[0]);
+                }
+                if (req.files.packshot) {
+                    packshotUrl = await processFile(req.files.packshot[0]);
+                }
+            }
 
-            // Return the updated product in JSON format
+            const newProduct = {
+                name,
+                price: parseFloat(price),
+                description,
+                active: active === "true",
+                thumbnail: thumbnailUrl,
+                packshot: packshotUrl,
+            };
+
+            await product.update(newProduct);
+            clearUploadsDirectory();
             return res.status(200).json({
                 success: true,
-                results: existingProduct,
-                message: `Product ${productId} has been successfully updated`,
+                results: product,
+                message: `Product ${productId} successfully updated`,
             });
         } catch (err) {
-            // If an error occurs, return a 500 status code with the error message
-            res.status(500).json({
-                success: false,
-                message: err.message,
-            });
+            res.status(500).json({ success: false, message: err.message });
         }
     },
 
@@ -239,24 +206,43 @@ module.exports = {
     },
 };
 
-const uploadImage = async (base64, name) => {
-    try {
-        const response = await fetch(process.env.FILE_UPLOAD_URL, {
-            method: "POST",
-            body: JSON.stringify({
-                file_name: name,
-                file_content_base64: base64,
-            }),
+//
+
+async function processFile(file) {
+    const base64 = await convertImageToBase64(file.path);
+    return await uploadImage(`${base64}`, file.filename);
+}
+
+async function uploadImage(base64, name) {
+    const response = await fetch(process.env.FILE_UPLOAD_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ file_name: name, file_content_base64: base64 }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || "Failed to upload image");
+    return data.url;
+}
+
+function convertImageToBase64(filePath) {
+    return new Promise((resolve, reject) => {
+        fs.readFile(filePath, (err, data) => {
+            if (err) reject(err);
+            else resolve(data.toString("base64"));
         });
-        const data = await response.json();
+    });
+}
 
-        if (!response.ok) {
-            throw new Error(data.message);
+function clearUploadsDirectory() {
+    const directory = path.join(__dirname, "../middlewares/uploads");
+
+    fs.readdir(directory, (err, files) => {
+        if (err) throw new Error(err);
+
+        for (const file of files) {
+            fs.unlink(path.join(directory, file), (err) => {
+                if (err) throw new Error(err);
+            });
         }
-
-        return data.url;
-    } catch (err) {
-        console.log("error uploading image : ", err);
-        throw new Error(err);
-    }
-};
+    });
+}
