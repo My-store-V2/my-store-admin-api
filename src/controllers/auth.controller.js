@@ -89,47 +89,9 @@ module.exports = {
     },
 
     session: async (req, res, next) => {
-        // Récupérer le token du header Authorization
-        const token = req.headers.authorization;
-
-        // Vérifier si le token est présent
-        if (!token) {
-            return res.status(401).json({
-                success: false,
-                message: "Token d'authentification manquant.",
-            });
-        }
-
-        try {
-            // Vérifier et décoder le token
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-            // Récupérer l'utilisateur à partir de l'ID du token
-            const user = await db.User.findByPk(decoded.userId);
-
-            // Vérifier si l'utilisateur existe
-            if (!user) {
-                return res.status(401).json({
-                    success: false,
-                    message: "Utilisateur non trouvé.",
-                });
-            }
-
-            // Ajouter l'utilisateur au corps de la requête pour l'utiliser dans d'autres middleware ou routes
-            req.user = user;
-
-            // Renvoyer le token
-            return res.status(200).json({
-                success: true,
-                message: "Token d'authentification valide.",
-                token,
-            });
-        } catch (err) {
-            // Erreur de token, renvoyer une erreur 401
-            return res.status(401).json({
-                success: false,
-                message: "Token d'authentification invalide.",
-            });
-        }
+        res.status(200).json({
+            success: true,
+            message: "User is authenticated",
+        });
     },
 };

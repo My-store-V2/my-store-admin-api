@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/auth.controller");
+const isAdminMiddleware = require("../middlewares/isAdminMiddleware");
 
 /**
  * @swagger
@@ -170,6 +171,6 @@ router.post("/signin", authController.signin);
  *              success: false
  *              message: Internal Server Error
  */
-router.get("/session", authController.session);
+router.get("/session", isAdminMiddleware, authController.session);
 
 module.exports = router;
