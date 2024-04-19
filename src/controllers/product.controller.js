@@ -136,6 +136,7 @@ module.exports = {
 
             let thumbnailUrl = null,
                 packshotUrl = null;
+            console.log(req.files);
             if (req.files) {
                 if (req.files.thumbnail) {
                     thumbnailUrl = await processFile(req.files.thumbnail[0]);
@@ -149,9 +150,11 @@ module.exports = {
                 name,
                 price: parseFloat(price),
                 description,
-                active: active === "true",
-                thumbnail: thumbnailUrl,
-                packshot: packshotUrl,
+                active,
+                thumbnail: req.files.thumbnail
+                    ? thumbnailUrl
+                    : product.thumbnail,
+                packshot: req.files.packshot ? packshotUrl : product.packshot,
             };
 
             await product.update(newProduct);
