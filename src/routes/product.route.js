@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const productController = require("../controllers/product.controller");
 const isAdminMiddleware = require("../middlewares/isAdminMiddleware");
+const upload = require("../middlewares/multer");
 
 /**
  * @swagger
@@ -136,7 +137,7 @@ router.get("/:id", isAdminMiddleware, productController.getProduct);
  *             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor ..."
  *             active: 1
  *             thumbnail_name: "product1.webp"
- *             thumbnail_base64: "base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiWeZgAA/9k="    
+ *             thumbnail_base64: "base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiWeZgAA/9k="
  *             packshot_name: "product1_packshot.jpeg"
  *             packshot_base64: "base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExMWFhUXGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgaHSggGBolHRgYITEhJSkrLi4uGB8zODMtNygtLisBCgoKDg0OGhAQGy0lHyUt"
  *             price: 123
@@ -164,7 +165,15 @@ router.get("/:id", isAdminMiddleware, productController.getProduct);
  *               message: Internal Server Error
  */
 
-router.post("/", isAdminMiddleware, productController.postProduct);
+router.post(
+    "/",
+    isAdminMiddleware,
+    upload.fields([
+        { name: "thumbnail", maxCount: 1 },
+        { name: "packshot", maxCount: 1 },
+    ]),
+    productController.postProduct
+);
 
 /**
  * @swagger
@@ -228,7 +237,14 @@ router.post("/", isAdminMiddleware, productController.postProduct);
  *               message: Internal Server Error
  */
 
-router.put("/:id", productController.putProduct);
+router.put(
+    "/:id",
+    upload.fields([
+        { name: "thumbnail", maxCount: 1 },
+        { name: "packshot", maxCount: 1 },
+    ]),
+    productController.putProduct
+);
 
 /**
  * @swagger
