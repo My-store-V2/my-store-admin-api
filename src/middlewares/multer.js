@@ -4,7 +4,7 @@ const path = require("path"); // Assurez-vous d'inclure le module 'path' pour un
 // Configuration du stockage
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.join(process.cwd(), "public", "uploads")); // Spécifier le dossier de destination pour les fichiers téléchargés
+        cb(null, path.resolve("public/uploads"));
     },
     filename: function (req, file, cb) {
         // Générer un suffixe unique basé sur le temps actuel et un nombre aléatoire
