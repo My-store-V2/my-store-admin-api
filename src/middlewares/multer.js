@@ -1,23 +1,8 @@
 const multer = require("multer");
 const path = require("path"); // Assurez-vous d'inclure le module 'path' pour une meilleure manipulation des chemins de fichiers
 
-// Configuration du stockage
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, path.resolve("../public/uploads"));
-    },
-    filename: function (req, file, cb) {
-        // Générer un suffixe unique basé sur le temps actuel et un nombre aléatoire
-        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-        // Construction du nom de fichier final
-        cb(
-            null,
-            `${file.fieldname}-${uniqueSuffix}${path.extname(
-                file.originalname
-            )}`
-        );
-    },
-});
+// Configuration du stockage en mémoire
+const storage = multer.memoryStorage();
 
 // Filtre pour spécifier les types de fichiers acceptés
 const fileFilter = (req, file, cb) => {

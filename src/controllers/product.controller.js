@@ -85,6 +85,8 @@ module.exports = {
 
             let thumbnailUrl = null,
                 packshotUrl = null;
+
+            console.log(req.files);
             if (req.files) {
                 if (req.files.thumbnail) {
                     thumbnailUrl = await processFile(req.files.thumbnail[0]);
@@ -102,8 +104,6 @@ module.exports = {
                 thumbnail: thumbnailUrl,
                 packshot: packshotUrl,
             });
-
-            // clearUploadsDirectory();
 
             res.status(201).json({
                 success: true,
@@ -209,8 +209,10 @@ module.exports = {
 //
 
 async function processFile(file) {
-    const base64 = await convertImageToBase64(file.path);
-    return await uploadImage(`${base64}`, file.filename);
+    return await uploadImage(
+        Buffer.from(file.buffer).toString("base64"),
+        file.originalname
+    );
 }
 
 async function uploadImage(base64, name) {
@@ -223,26 +225,3 @@ async function uploadImage(base64, name) {
     if (!response.ok) throw new Error(data.message || "Failed to upload image");
     return data.url;
 }
-
-function convertImageToBase64(filePath) {
-    return new Promise((resolve, reject) => {
-        fs.readFile(filePath, (err, data) => {
-            if (err) reject(err);
-            else resolve(data.toString("base64"));
-        });
-    });
-}
-
-// function clearUploadsDirectory() {
-//     const directory = path.join(__dirname, "../../public/uploads");
-
-//     fs.readdir(directory, (err, files) => {
-//         if (err) throw new Error(err);
-
-//         for (const file of files) {
-//             fs.unlink(path.join(directory, file), (err) => {
-//                 if (err) throw new Error(err);
-//             });
-//         }
-//     });
-// }
