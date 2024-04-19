@@ -103,7 +103,7 @@ module.exports = {
                 packshot: packshotUrl,
             });
 
-            clearUploadsDirectory();
+            // clearUploadsDirectory();
 
             res.status(201).json({
                 success: true,
@@ -155,7 +155,7 @@ module.exports = {
             };
 
             await product.update(newProduct);
-            clearUploadsDirectory();
+            // clearUploadsDirectory();
             return res.status(200).json({
                 success: true,
                 results: product,
@@ -233,16 +233,16 @@ function convertImageToBase64(filePath) {
     });
 }
 
-function clearUploadsDirectory() {
-    const directory = path.join(__dirname, "../../public/uploads");
+// function clearUploadsDirectory() {
+//     const directory = path.join(__dirname, "../../public/uploads");
 
-    fs.readdir(directory, (err, files) => {
-        if (err) throw new Error(err);
+//     fs.readdir(directory, (err, files) => {
+//         if (err) throw new Error(err);
 
-        for (const file of files) {
-            fs.unlink(path.join(directory, file), (err) => {
-                if (err) throw new Error(err);
-            });
-        }
-    });
-}
+//         for (const file of files) {
+//             fs.unlink(path.join(directory, file), (err) => {
+//                 if (err) throw new Error(err);
+//             });
+//         }
+//     });
+// }
