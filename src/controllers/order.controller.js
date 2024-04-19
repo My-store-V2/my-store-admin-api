@@ -1,5 +1,6 @@
 const db = require("../models");
 const refundMail = require("../utils/refundMail");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 module.exports = {
     // controller to get all orders
     getOrders: async (req, res) => {
@@ -114,30 +115,38 @@ module.exports = {
 
     refundedOrder: async (req, res, next) => {
         const orderId = req.params.id;
+        if (!orderId) return res.status(404).json({ success: false, message: "Order not provided" });
         try {
             const order = await db.Orders.findByPk(orderId);
-            console.log(order.user_id);
-            const user = await db.User.findByPk(order.user_id);
-            console.log(user.email);
             if (!order) {
                 return res.status(404).json({
                     success: false,
                     message: "Order not found",
                 });
             }
+            const user = await db.User.findByPk(order.user_id);
 
-            const ordersRefunded = await db.Orders.findAll({
-                where: {
-                    id: orderId,
-                    status: "refunded on demand",
-                },
-            });
 
-            if (ordersRefunded.length === 0) {
-                return res.status(500).json({
+            if (order.status !== "refunded on demand") {
+                return res.status(400).json({
                     success: false,
-                    message: "Error: No orders found requesting refund",
+                    message: "Order status is not 'refunded on demand'",
                 });
+            }
+
+
+            // Send refund stripe
+            const paymentIntent = order.stripe_payment_id;
+
+
+            if (paymentIntent) {
+                try {
+                    stripe.refunds.create({
+                        payment_intent: paymentIntent,
+                    });
+                } catch (error) {
+                    console.error(error.message);
+                }
             }
 
             await db.Orders.update(
