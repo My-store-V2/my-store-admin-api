@@ -234,7 +234,7 @@ function convertImageToBase64(filePath) {
 }
 
 function clearUploadsDirectory() {
-    const directory = path.join(__dirname, "../middlewares/uploads");
+    const directory = path.join(__dirname, "../../public/uploads");
 
     fs.readdir(directory, (err, files) => {
         if (err) throw new Error(err);
